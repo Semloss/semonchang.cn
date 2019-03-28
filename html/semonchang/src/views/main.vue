@@ -18,9 +18,13 @@ export default {
 .container {
   height: 100vh;
   width: 100vw;
-  background: #ffffff
-    url("../../../../../../../Desktop/isabela-ferreira-780666-unsplash.jpg")
+  background: #ffffff url("../../../../../../../Desktop/raquel-unsplash.jpg")
     center no-repeat;
-  background-size: 100%;
+  /* background-size: 100%; */
+
+  .nav {
+    height: 6%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 }
 </style>
