@@ -1,22 +1,21 @@
 <template>
   <div class="container">
     <div class="nav">
-      <img src="../../../../../../../Desktop/logo.png" alt="" class="logo" />
+      <img
+        src="https://img.hellobyebye.com/fd48916c4b133a983116f1a693fa01e2.jpg"
+        alt=""
+        class="logo"
+      />
       <p class="login" @click="dialogFormVisible = true">Login</p>
     </div>
     <div class="body"></div>
-    <el-dialog
-      title="登录"
-      :visible.sync="dialogFormVisible"
-      width="30%"
-      center="true"
-    >
+    <el-dialog title="登录" :visible.sync="dialogFormVisible" width="30%">
       <el-form :model="form">
         <el-form-item label="用户名" :label-width="formLabelWidth">
-          <el-input v-model="username" autocomplete="off"></el-input>
+          <el-input v-model="form.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth">
-          <el-input v-model="passwd" autocomplete="off"></el-input>
+          <el-input v-model="form.passwd" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -35,8 +34,10 @@ export default {
   data() {
     return {
       dialogFormVisible: false,
-      username: "",
-      passwd: "",
+      form: {
+        username: "",
+        passwd: ""
+      },
       formLabelWidth: "60px"
     };
   }
@@ -47,7 +48,8 @@ export default {
 .container {
   height: 100vh;
   width: 100vw;
-  background: #ffffff url("../../../../../../../Desktop/raquel-unsplash.jpg")
+  background: #ffffff
+    url("https://img.hellobyebye.com/54268b7fab123bd05303bf21a773b3a0.jpg")
     center no-repeat;
   /* background-size: 100%; */
 
