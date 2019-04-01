@@ -73,6 +73,7 @@ export default {
     }
     .login:hover {
       color: #c0c4cc;
+      cursor: pointer;
     }
   }
 }
