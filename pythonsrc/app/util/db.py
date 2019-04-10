@@ -67,13 +67,16 @@ class DBPool(object):
 	def get_db(self, stamp):
 		if stamp not in self._db_map:
 			raise Exception("没有找到这个key")
-		conn, cursor = self._db_map.pop(stamp)
+		conn, cursor = self._db_map[stamp]
 		return conn, cursor
 
 	def close(self, stamp):
-		conn, cursor = self.get_db(stamp)
-		cursor.close()
-		conn.close()
+		conn, cursor = self._db_map.pop(stamp, None)
+		if conn != None:
+			conn.close()
+		if cursor != None:
+			cursor.close()
+
 	
 	def getquery(self, stamp, sql):
 		conn, cursor = self.get_db(stamp)
@@ -86,17 +89,15 @@ class DBPool(object):
 		ret = cursor.execute(sql)
 		return ret
 
-	#def __del__(self):
-	#	for key,value in self._db_map.items():
-	#		value[0].close()
-	#		value[1].close()
+	def __del__(self):
+		for key,value in self._db_map.items():
+			value[0].close()
+			value[1].close()
 
 if __name__ == "__main__":
 	dbpool = DBPool(dbname = "semonchang")
 	dbobj = dbpool.open()
 	result = dbpool.getquery(dbobj, "select * from account")
 	print(result)
-	'''
-	pool = PooledDB(pymysql, 5, host = '172.27.200.3', user = 'root', passwd = 'zhangsong@', db = "semonchang", port = 3306)
-	conn = pool.connection()
-	'''
+	result = dbpool.getquery(dbobj, "select * from account")
+	print(result)
