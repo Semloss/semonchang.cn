@@ -1,16 +1,15 @@
 # -*- coding:utf-8 -*-
 
-__all__ = ['conf']
-
 class BaseConfig(object):
 	'''
 	common configration:
 	suitable for these case:
 		-common wording
 		-databases connection
+		必须使用大写 
 	'''
-	host = '127.0.0.1'
-	port = 9001
+	HOST = '127.0.0.1'
+	PORT = 9001
 
 
 class TestConfig(BaseConfig):
@@ -24,8 +23,3 @@ class ProductConfig(BaseConfig):
 	configration for product
 	'''
 	DEBUG  = False
-
-conf = {
-		'Test': TestConfig,
-		'Product': ProductConfig,
-		}
