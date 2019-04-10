@@ -51,21 +51,23 @@ class DBPool(object):
 	_pool = None
 	_db_map = dict()
 	
-	def __int__(self, dbname, host = '172.23.200.3', user = 'root', passwd = 'zhangsong@',port = '3306', creator = pymysql, mincached = 50, maxcached = 100, maxconnections = 100):
+	def __init__(self, dbname, host = '172.27.200.3', user = 'root', passwd = 'zhangsong@',port = 3306, creator = pymysql, mincached = 50, maxcached = 100, maxconnections = 100):
 		if self._pool == None:
-			self._pool = PooledDB(creator = creator, mincached = mincached, maxcached = maxcached, maxconnections = maxconnections, host = host, user = user, passwd = passwd, port = port, db = dbname)
+			self._pool = PooledDB(creator, mincached = mincached, maxcached = maxcached, maxconnections = maxconnections, host = host, user = user, passwd = passwd, db = dbname, port = port)
+			#self._pool = PooledDB(creator, mincached = mincached, maxcached = maxcached, maxconnections = maxconnections, host = '172.23.200.3', user = 'root', passwd = 'zhangsong@', db = 'semonchang', port = 3306)
+			#self._pool = PooledDB(creator, mincached = mincached, maxcached = maxcached, maxconnections = maxconnections, host = '172.27.200.3', user = 'root', passwd = 'zhangsong@', db = "semonchang", port = 3306)
 	
 	def open(self):
 		conn                     = self._pool.connection()
-		cursor                   = conn.cursor
+		cursor                   = conn.cursor()
 		stamp                    = int(time.time() * 1000)
 		self._db_map[stamp]      = (conn, cursor)
-		return stamp, (conn, cursor)
+		return stamp
 	
 	def get_db(self, stamp):
-		if stamp not in _db_map:
+		if stamp not in self._db_map:
 			raise Exception("没有找到这个key")
-		conn, cursor = _db_map.pop(stamp)
+		conn, cursor = self._db_map.pop(stamp)
 		return conn, cursor
 
 	def close(self, stamp):
@@ -73,7 +75,7 @@ class DBPool(object):
 		cursor.close()
 		conn.close()
 	
-	def getqeury(self, stamp, sql):
+	def getquery(self, stamp, sql):
 		conn, cursor = self.get_db(stamp)
 		ret = cursor.execute(sql)
 		result = cursor.fetchall()
@@ -84,10 +86,17 @@ class DBPool(object):
 		ret = cursor.execute(sql)
 		return ret
 
-	def __del__(self):
-		for conn, cursor in self._db_map.items():
-			conn.close()
-			cursor.close()
+	#def __del__(self):
+	#	for key,value in self._db_map.items():
+	#		value[0].close()
+	#		value[1].close()
 
 if __name__ == "__main__":
-	pass
+	dbpool = DBPool(dbname = "semonchang")
+	dbobj = dbpool.open()
+	result = dbpool.getquery(dbobj, "select * from account")
+	print(result)
+	'''
+	pool = PooledDB(pymysql, 5, host = '172.27.200.3', user = 'root', passwd = 'zhangsong@', db = "semonchang", port = 3306)
+	conn = pool.connection()
+	'''
