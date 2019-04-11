@@ -31,7 +31,6 @@ class prpcrypt():
 		#解密去掉多余的空格
 		cryptor = AES.new(self.key, self.mode, b'0000000000000000')
 		plain_text = cryptor.decrypt(a2b_hex(text))
-		#return bytes.decode(plain_text.rstrip('\0'))
 		return bytes.decode(plain_text).rstrip('\0')
 
 
