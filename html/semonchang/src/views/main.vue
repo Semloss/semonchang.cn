@@ -6,7 +6,7 @@
         alt=""
         class="logo"
       />
-      <p class="login" @click="dialogFormVisible = true">Login</p>
+      <p class="login" @click="dialogFormVisible = true">LOGIN</p>
     </div>
     <div class="body"></div>
     <el-dialog title="登录" :visible.sync="dialogFormVisible" width="30%">
@@ -55,7 +55,7 @@ export default {
 
   .nav {
     height: 60px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.1);
     position: relative;
 
     .logo {

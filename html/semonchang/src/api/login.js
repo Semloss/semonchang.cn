@@ -1,5 +1,5 @@
-import axios from "axios";
+import { post } from "../util/axios";
 
-// export const login = axios.post()
-
-// export const logintest = axios.get("")
+export const login = (id, passwd) => {
+  return post("/account/login", { id, passwd });
+};
