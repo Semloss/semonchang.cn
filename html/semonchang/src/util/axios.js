@@ -3,7 +3,9 @@
  * @Author: semonchang
  * @LastEditors: Please set LastEditors
  * @Date: 2019-04-11 17:20:54
- * @LastEditTime: 2019-04-12 12:05:37
+ * @LastEditTime: 2019-04-12 18:45:48
+ * @服务器返回的数据类似于这样{data: {openid:'HA72392HH'}, code: 0} //0 == 正确返回，!= 0 表示错误
+ * @网页端从errorCode当中获取code所表示的msg，并展示出来提供给用户或者开发者
  */
 
 import axios from "axios";
@@ -22,10 +24,15 @@ const axiosHttper = {
   updateTimeOut: 100000
 };
 
-const axiosinstance = axios.create({
+const axiosInstance = axios.create({
   baseURL: axiosHttper.baseURL,
   timeout: axiosHttper.timeOut
 });
+
+axiosInstance.interceptors.response.use(
+  handleResponseSuccess,
+  handleResponseFail
+);
 
 //记录发送中带请求，避免post重复，导致post同时修改数据，导致数据出问题
 const urlRecorder = {
@@ -111,7 +118,7 @@ async function commonSend(config) {
   }
   await urlRecorder.add(config);
   config.url = addVersion(config.url);
-  return axiosinstance(config);
+  return axiosInstance(config);
 }
 
 axiosHttper.post = function axiosPost(
@@ -150,24 +157,15 @@ axiosHttper.get = function axiosGet(
  *
  *
  * @param {object} config request config
- * @param {objetct} result response
+ * @param {errorCode} result code 错误码
  */
-function handleError(config, result) {
-  let err;
-  if (result instanceof Error) {
-    err = result;
-  } else {
-    err = new Error(result.message);
-    err.data = result.data;
-    err.code = result.code;
-  }
-
+function handleError(config, code) {
+  let err = new Error(errorCode.getCode(code).message);
   if (config && axiosHttper.defaultErrorHandler) {
     err.url = config.url;
     axiosHttper.defaultErrorHandler(err);
     err.processed = true;
   } else {
-    console.log(config);
     console.log(err);
   }
   return Promise.reject(err);
@@ -175,10 +173,10 @@ function handleError(config, result) {
 
 // need upload file interface
 
-axiosInstance.interceptors.response.use(
-  handleResponseSuccess,
-  handleResponseFail
-);
+// axiosInstance.interceptors.response.use(
+//   handleResponseSuccess,
+//   handleResponseFail
+// );
 
 /**
  *对返回的数据进行拦截处理
@@ -189,27 +187,76 @@ function handleResponseSuccess(response) {
   urlRecorder.remove(response.config);
   if (typeof response.data.code !== "number") {
     console.error("can not parse from response");
-    let result = {
-      data: {},
-      code: errorCode.ERROR_PARSE
-    };
-    return handleError(response.config, result);
+    return handleError(response.config, errorCode.ERROR_PARSE.code);
   }
   const result = getResponse(response.data);
   if (result.code === 0) {
     return result.data;
   }
-  result.message = errorCode.getCodeMessage(result.code);
-  return handleError(response.config, result);
+  return handleError(response.config, result.code);
 }
 
 function getResponse(result) {
   if (typeof result.code !== "number") {
     return {
       data: {},
-      code: errorCode.ERROR_PARSE,
-      message: errorCode.getCodeMessage(errorCode.ERROR_PARSE)
+      code: errorCode.ERROR_PARSE.code,
+      message: errorCode.ERROR_PARSE.message
     };
   }
+  return {
+    data: result.data,
+    code: result.code,
+    message: errorCode.getCode(result.data).message
+  };
+}
+
+function handleResponseFail(error) {
+  urlRecorder.remove(error.config);
+  let result;
+  if (error.response) {
+    // 请求已发送，响应中返回了非2xx的错误码，包括304等
+    const codeMap = {
+      401: errorCode.HTTP_UNAUTHORIZED,
+      403: errorCode.HTTP_FORBIDDEN,
+      404: errorCode.HTTP_NOT_FOUND
+    };
+    const code = codeMap[error.response.status] || errorCode.HTTP_NETWORK_ERR;
+    const responseData = getResponse(error.response.data);
+    result = fillErrorMessage(
+      code,
+      `${error.response.status} ${error.response.statusText}`,
+      responseData
+    );
+  } else if (error.message.startsWith("timeout of ")) {
+    // 请求没有发出去，本地产生的错误
+    result = fillErrorMessage(errorCode.HTTP_TIME_OUT, "no response");
+  } else if (
+    !error.config.url.startsWith(window.location.origin) &&
+    error instanceof Error
+  ) {
+    error.code = errorCode.HTTP_CROSS_DOMAIN;
+    error.message =
+      errorCode.getCode(errorCode.HTTP_CROSS_DOMAIN).message ||
+      `Can not access from ${window.location.origin}!`;
+    result = error;
+  } else if (error instanceof Error) {
+    error.code = errorCode.HTTP_NETWORK_ERR;
+    error.message =
+      errorCode.getCodeData(errorCode.HTTP_NETWORK_ERR).message ||
+      error.message;
+    result = error;
+  } else {
+    result = fillErrorMessage(errorCode.HTTP_NETWORK_ERR, error.message);
+  }
+  return handleError(error.config, result.code);
+}
+
+function fillErrorMessage(code, message, data = null) {
+  return {
+    data,
+    code,
+    message: errorCode.getCodeData(code).message || message
+  };
 }
 export default axiosHttper;
