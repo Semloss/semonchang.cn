@@ -1,6 +1,3 @@
-/**
- * Created by lnk on 2016/4/19.
- */
 import axios from "axios";
 import Qs from "qs";
 import errorCode from "./error_code";
