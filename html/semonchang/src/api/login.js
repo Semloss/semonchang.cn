@@ -1,5 +1,5 @@
-import { post } from "../util/axios";
+import http from "../util/axios";
 
 export const login = (id, passwd) => {
-  return post("/account/login", { id, passwd });
+  return http.get("api/account/login", { id, passwd });
 };

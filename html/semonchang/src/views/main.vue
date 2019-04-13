@@ -20,15 +20,15 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="login()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import * as api from "../api/login";
+import axios from "axios";
 export default {
   name: "mainpage",
   data() {
@@ -38,8 +38,23 @@ export default {
         username: "",
         passwd: ""
       },
-      formLabelWidth: "60px"
+      formLabelWidth: "60px",
+      loginSuccess: false
     };
+  },
+  methods: {
+    async login() {
+      try {
+        const res = await api.login({
+          id: this.form.username,
+          passwd: this.form.username.passwd
+        });
+        this.dialogFormVisible = false;
+        console.log(res);
+      } catch (e) {
+        console.log(e);
+      }
+    }
   }
 };
 </script>
