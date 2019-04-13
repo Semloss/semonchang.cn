@@ -3,14 +3,15 @@
  * @Author: semonchang
  * @LastEditors: Please set LastEditors
  * @Date: 2019-04-11 18:28:08
- * @LastEditTime: 2019-04-12 18:36:54
+ * @LastEditTime: 2019-04-13 11:23:48
  */
 
 const DEFAULT_ERROR_MSG = "Unknow Error!";
 //存放被定义过后的error对象
 const errorCode = {};
 errorCode.SUCCESS = defineCode(0, "success");
-errorCode.UNKNOW_ERROR = defineCode(999, "unKonw Error");
+errorCode.UNKNOW_ERROR = defineCode(1000, "unKonw Error");
+errorCode.ERROR_PARSE = defineCode(1001, "the code is not a number");
 
 function defineCode(code, message) {
   if (errorCode[code]) {
@@ -22,7 +23,6 @@ function defineCode(code, message) {
     message: `($code)${message}` || `($code)${DEFAULT_ERROR_MSG}`,
     code: code
   };
-  return code;
 }
 
 //errorCode[code] = {message, code}

@@ -3,7 +3,7 @@
  * @Author: semonchang
  * @LastEditors: Please set LastEditors
  * @Date: 2019-04-11 17:20:54
- * @LastEditTime: 2019-04-12 18:45:48
+ * @LastEditTime: 2019-04-13 11:20:44
  * @服务器返回的数据类似于这样{data: {openid:'HA72392HH'}, code: 0} //0 == 正确返回，!= 0 表示错误
  * @网页端从errorCode当中获取code所表示的msg，并展示出来提供给用户或者开发者
  */
@@ -157,14 +157,13 @@ axiosHttper.get = function axiosGet(
  *
  *
  * @param {object} config request config
- * @param {errorCode} result code 错误码
+ * @param {string} result code 只需要传递过来msg，msg中带有错误码
  */
-function handleError(config, code) {
-  let err = new Error(errorCode.getCode(code).message);
+function handleError(config, errmsg) {
+  let err = new Error(errmsg);
   if (config && axiosHttper.defaultErrorHandler) {
     err.url = config.url;
     axiosHttper.defaultErrorHandler(err);
-    err.processed = true;
   } else {
     console.log(err);
   }
@@ -187,13 +186,13 @@ function handleResponseSuccess(response) {
   urlRecorder.remove(response.config);
   if (typeof response.data.code !== "number") {
     console.error("can not parse from response");
-    return handleError(response.config, errorCode.ERROR_PARSE.code);
+    return handleError(response.config, errorCode.ERROR_PARSE.message);
   }
   const result = getResponse(response.data);
   if (result.code === 0) {
     return result.data;
   }
-  return handleError(response.config, result.code);
+  return handleError(response.config, errorCode.getCode(result.code).message);
 }
 
 function getResponse(result) {
@@ -249,7 +248,7 @@ function handleResponseFail(error) {
   } else {
     result = fillErrorMessage(errorCode.HTTP_NETWORK_ERR, error.message);
   }
-  return handleError(error.config, result.code);
+  return handleError(error.config, result.message);
 }
 
 function fillErrorMessage(code, message, data = null) {
