@@ -3,7 +3,7 @@
  * @Author: semonchang
  * @LastEditors: Please set LastEditors
  * @Date: 2019-04-11 17:20:54
- * @LastEditTime: 2019-04-13 11:20:44
+ * @LastEditTime: 2019-04-13 13:57:52
  * @服务器返回的数据类似于这样{data: {openid:'HA72392HH'}, code: 0} //0 == 正确返回，!= 0 表示错误
  * @网页端从errorCode当中获取code所表示的msg，并展示出来提供给用户或者开发者
  */
@@ -55,7 +55,7 @@ const urlRecorder = {
       }
       if (this.urlList.includes(url)) {
         const code = errorCode.DUPLICATE_REQUEST;
-        const error = new Error(errorCode.getCodeData(code).message);
+        const error = new Error(errorCode.getCode(code).message);
         error.code = code;
         return handleError(config, error);
       }
@@ -206,7 +206,7 @@ function getResponse(result) {
   return {
     data: result.data,
     code: result.code,
-    message: errorCode.getCode(result.data).message
+    message: errorCode.getCode(result.code).message
   };
 }
 
@@ -242,8 +242,7 @@ function handleResponseFail(error) {
   } else if (error instanceof Error) {
     error.code = errorCode.HTTP_NETWORK_ERR;
     error.message =
-      errorCode.getCodeData(errorCode.HTTP_NETWORK_ERR).message ||
-      error.message;
+      errorCode.getCode(errorCode.HTTP_NETWORK_ERR).message || error.message;
     result = error;
   } else {
     result = fillErrorMessage(errorCode.HTTP_NETWORK_ERR, error.message);
@@ -255,7 +254,7 @@ function fillErrorMessage(code, message, data = null) {
   return {
     data,
     code,
-    message: errorCode.getCodeData(code).message || message
+    message: errorCode.getCode(code).message || message
   };
 }
 export default axiosHttper;
