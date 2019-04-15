@@ -31,7 +31,8 @@ def create_app():
 	print(app.config)
 
 	#init db pool
-	with app.app_context():
-		g.dbpool = db.DBPool(dbname = "semonchang")
+	#with app.app_context():
+	#	g.dbpool = db.DBPool(dbname = "semonchang")
+	g.dbpool = db.DBPool(dbname = "semonchang")
 
 	return app
