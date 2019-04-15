@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
 
 from .views import app_account
-import sys
-sys.path.insert(0, "/home/www/src/semonchang/pythonsrc/app")
 from util import rsp
+from util.logger import loggerobj
 from flask import request, g
+import hashlib
 
 '''
 官方文档中：
@@ -15,13 +15,27 @@ from flask import request, g
 
 @app_account.route('/login', methods = ['POST'])
 def login():
-    id = request.values.get('id', '')
-    passwd = request.values.get('passwd', '')
-    ret = check_login(id, passwd)
+	'''
+	登录接口
+	'''
+	loggerobj.error(request)
+	username = request.values.get('id', '')
+	passwd = request.values.get('passwd', '')
+	if username == '' or passwd == '':
+		return failed(2000)
+	return check_login(username, passwd)
 
 
 
-def check_login(id = '', passwd = ''):
-    if id == '' or passwd = '':
-        return False
-    dbobj = db.
+def check_login(username = '', passwd = ''):
+	dbobj = g.dbpool.open()
+	sql = "select id, passwd from account where id = '%s'" % (username)
+	result = dbobj.getquery(dbobj, sql)
+	if len(result) == 0:
+		return Flase(2001)
+	md5 = hashlib.md5()
+	md5.update(passwd.encode("utf-8"))
+	if md5.hexdigest() == result[0][1]:
+		return success()
+	else:
+		return failed(2002)

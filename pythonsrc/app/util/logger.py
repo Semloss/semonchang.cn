@@ -2,7 +2,7 @@
 
 import sys
 import logging
-import logging.conf
+import logging.handlers
 
 loggerobj = logging.getLogger("loggerobj")
 hdlr = logging.handlers.RotatingFileHandler("/home/www/log/semonchang.log", maxBytes=20*1024*1024, backupCount=20)

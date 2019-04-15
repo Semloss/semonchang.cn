@@ -1,13 +1,16 @@
 # -*- coding:utf-8 -*-
 
 from flask import Flask, current_app, g
+import sys
+sys.path.insert(0, "/home/www/src/semonchang/pythonsrc/app")
+
 '''
 	current_app:  表示当前应用实例，全局
 	g:            表示处理请求时的临时存储变量 / 0.10 版本之后从全局上下文成为请求的上下文
 '''
 
 from account.views import app_account
-from . import config
+import config
 from util import db
 
 def register_blueprints(app):
@@ -31,8 +34,7 @@ def create_app():
 	print(app.config)
 
 	#init db pool
-	#with app.app_context():
-	#	g.dbpool = db.DBPool(dbname = "semonchang")
-	g.dbpool = db.DBPool(dbname = "semonchang")
+	with app.app_context():
+		g.dbpool = db.DBPool(dbname = "semonchang")
 
 	return app
