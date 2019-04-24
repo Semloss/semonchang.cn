@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <div class="login">
-      <p class="logintext" @click="dialogFormVisible = true">Login</p>
+    <div class="login" @click="jumpto()">
+      <p class="logintext">Login</p>
     </div>
   </div>
 </template>
@@ -26,6 +26,10 @@ export default {
       } catch (e) {
         console.log(e);
       }
+    },
+    jumpto() {
+      this.$router.push({ path: "/login" });
+      console.log(this.$router);
     }
   }
 };
@@ -38,7 +42,6 @@ export default {
   background: #ffffff
     url("https://img.hellobyebye.com/9e2a6d4b9a6345e17889c19ee2002935.jpg")
     center no-repeat;
-  /* background-size: 100%; */
   position: relative;
 
   .login {
