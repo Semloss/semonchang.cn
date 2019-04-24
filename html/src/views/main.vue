@@ -7,26 +7,29 @@
 </template>
 
 <script>
-import * as api from "../api/login";
-// import axios from "axios";
 export default {
   name: "mainPage",
   data() {
-    return {};
+    return {
+      artlist: [
+        {
+          title: "aaa",
+          content:
+            "dasdasdasdasdasdasdasdddddasfdgdfgdfgdfgdfggdfgdfgdfgdfgdfgdfgdfgdfgdfgdfg",
+          authr: "semon",
+          date: "2019-01-01"
+        },
+        {
+          title: "aaa",
+          content:
+            "dasdasdasdasdasdasdasdddddasfdgdfgdfgdfgdfggdfgdfgdfgdfgdfgdfgdfgdfgdfgdfg",
+          authr: "semon",
+          date: "2019-01-01"
+        }
+      ]
+    };
   },
   methods: {
-    async login() {
-      try {
-        const res = await api.login({
-          id: this.form.username,
-          passwd: this.form.username.passwd
-        });
-        this.dialogFormVisible = false;
-        console.log(res);
-      } catch (e) {
-        console.log(e);
-      }
-    },
     jumpto() {
       this.$router.push({ path: "/login" });
       console.log(this.$router);
@@ -46,13 +49,13 @@ export default {
 
   .login {
     background-color: #c21f5b;
-    height: 50px;
-    width: 100px;
+    height: 40px;
+    width: 80px;
     position: absolute;
     right: 5%;
     top: 25%;
     border-radius: 25px;
-    line-height: 50px;
+    line-height: 40px;
     right: 15%;
     top: 5%;
     .logintext {

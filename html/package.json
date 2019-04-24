@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "/Users/semonchang/src/semonchang.cn/html/semonchang/node_modules/@vue/cli-service/bin/vue-cli-service.js serve",
-    "build": "/Users/semonchang/src/semonchang.cn/html/semonchang/node_modules/@vue/cli-service/bin/vue-cli-service.js build",
-    "lint": "/Users/semonchang/src/semonchang.cn/html/semonchang/node_modules/@vue/cli-service/bin/vue-cli-service.js lint"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "axios": "^0.18.0",

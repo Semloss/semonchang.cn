@@ -15,13 +15,14 @@
           class="passwdinput"
           show-password
         ></el-input>
-        <el-button plain class="loginbutton">登录</el-button>
+        <el-button plain class="loginbutton" @click="login()">登录</el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import * as api from "../api/login";
 export default {
   name: "login",
   data() {
@@ -29,6 +30,25 @@ export default {
       account: "",
       passwd: ""
     };
+  },
+  methods: {
+    async login() {
+      try {
+        console.log(this.account);
+        console.log(this.passwd);
+        const res = await api.login({
+          id: this.account,
+          passwd: this.passwd
+        });
+        console.log(res);
+        // 如果正确返回则跳转到用户中心
+        this.$router.push({ path: "/home" });
+      } catch (e) {
+        console.log(e);
+        // 全局的报错提示
+        this.$message.error("错了哦，这是一条错误消息");
+      }
+    }
   }
 };
 </script>
@@ -46,7 +66,7 @@ export default {
     height: 40%;
     width: 30%;
     position: absolute;
-    top: 30%;
+    top: 25%;
     left: 35%;
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
@@ -81,7 +101,7 @@ export default {
         position: absolute;
         left: 11%;
         width: 80%;
-        bottom: 10%;
+        bottom: 17%;
       }
     }
   }
