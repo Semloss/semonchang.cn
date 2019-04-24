@@ -1,20 +1,21 @@
 <template>
   <div class="container">
     <div class="board">
-      <h1>login</h1>
+      <h1 class="title">login</h1>
       <div class="input">
-        <p class="account">账号</p>
         <el-input
-          placeholder="请输入账号"
+          placeholder="这里输入账号"
           v-model="account"
+          class="accountinput"
           clearable
         ></el-input>
-        <p class="passwd">密码</p>
         <el-input
-          placeholder="请输入密码"
+          placeholder="这里输入密码"
           v-model="passwd"
+          class="passwdinput"
           show-password
         ></el-input>
+        <el-button plain class="loginbutton">登录</el-button>
       </div>
     </div>
   </div>
@@ -42,15 +43,46 @@ export default {
   position: relative;
 
   .board {
-    height: 50%;
+    height: 40%;
     width: 30%;
     position: absolute;
-    top: 25%;
+    top: 30%;
     left: 35%;
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
+    .title {
+      padding-top: 10px;
+      height: 20%;
+      font-size: 3rem;
+    }
+
     .input {
       position: relative;
+      width: 100%;
+      height: 80%;
+
+      .el-input__inner {
+        width: 80%;
+        position: absolute;
+        right: 10px;
+      }
+
+      .passwdinput {
+        position: absolute;
+        left: -7%;
+        top: 36%;
+      }
+      .accountinput {
+        position: absolute;
+        top: 10%;
+        left: -7%;
+      }
+      .loginbutton {
+        position: absolute;
+        left: 11%;
+        width: 80%;
+        bottom: 10%;
+      }
     }
   }
 }
