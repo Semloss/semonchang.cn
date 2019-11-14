@@ -2,8 +2,6 @@ import Vue from "vue";
 import Router from "vue-router";
 
 const mainPage = r => import("./views/main.vue").then(r);
-const login = r => import("./views/login.vue").then(r);
-const mainPageNew = r => import("./views/newmain.vue").then(r);
 
 Vue.use(Router);
 
@@ -14,16 +12,6 @@ export default new Router({
       name: "main",
       component: mainPage,
       children: []
-    },
-    {
-      path: "/login",
-      name: "login",
-      component: login
-    },
-    {
-      path: "/new",
-      name: "new",
-      component: mainPageNew
     }
   ]
 });

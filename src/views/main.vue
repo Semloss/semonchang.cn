@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: "mainPage",
+  name: "main",
   data() {
     return {
       artlist: [
